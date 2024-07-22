@@ -1,92 +1,71 @@
-// Global variables
-let numeroSecreto;
+// Declare global variables
+let secretNumber;
 let counter;
-let numerosSorteados = [0];
+let drawnNumbers = [0];
 
-// Set initial conditions for the game
+// Initialize the game with initial conditions
 initialConditions();
 
-/**
- * Assigns text to a specified HTML element.
- * elemento - The selector of the HTML element.
- * texto - The text to assign to the element.
- */
-function asignarTextoElemento(elemento, texto) {
-    let elementoHTML = document.querySelector(elemento);
-    elementoHTML.innerHTML = texto;
+// Function to assign text to an HTML element
+function assignTextToElement(element, text) {
+    let elementHTML = document.querySelector(element);
+    elementHTML.innerHTML = text;
 }
 
-/**
- * Generates a secret number between 1 and 10.
- * Ensures the number hasn't been generated before in the current game session.
- * Returns the generated secret number.
- */
-function generarNumeroSecreto() {
+// Function to generate a secret number
+function generateSecretNumber() {
     let number = Math.floor(Math.random() * 10) + 1;
-
-    // Reset the sorted numbers array if it has 11 elements
-    if (numerosSorteados.length == 11) {
-        numerosSorteados = [0];
+    // Reset the array if it contains 11 numbers
+    if (drawnNumbers.length == 11) {
+        drawnNumbers = [0];
     } else {
-        // Ensure the number is unique
-        while (numerosSorteados.includes(number)) {
+        // Ensure the number is not repeated
+        while (drawnNumbers.includes(number)) {
             number = Math.floor(Math.random() * 10) + 1;
             console.log('Repeated number');
         }
     }
-
-    numerosSorteados.push(number);
-    console.log(numerosSorteados);
+    drawnNumbers.push(number);
+    console.log(drawnNumbers);
     return number;
 }
 
-/**
- * Verifies the user's attempt to guess the secret number.
- * Provides feedback and updates the counter.
- */
-function verificarIntento() {
-    let intento = parseInt(document.getElementById('valorUsuario').value);
-
-    if (intento == numeroSecreto) {
-        asignarTextoElemento('p', `Acertaste el numero en ${counter} ${(counter == 1) ? "vez" : "veces"}`);
-        document.getElementById('reiniciar').removeAttribute('disabled');
-    } else if (intento <= numeroSecreto) {
-        asignarTextoElemento('p', 'El numero secreto es mayor');
+// Function to verify the user's attempt
+function checkAttempt() {
+    let attempt = parseInt(document.getElementById('userValue').value);
+    if (attempt == secretNumber) {
+        assignTextToElement('p', `You guessed the number in ${counter} ${(counter == 1) ? "try" : "tries"}`);
+        document.getElementById('restart').removeAttribute('disabled');
+    } else if (attempt <= secretNumber) {
+        assignTextToElement('p', 'The secret number is higher');
         counter++;
-        cleanBox();
+        clearBox();
     } else {
-        asignarTextoElemento('p', 'El numero secreto es menor');
+        assignTextToElement('p', 'The secret number is lower');
         counter++;
-        cleanBox();
+        clearBox();
     }
     console.log(counter);
 }
 
-/**
- * Clears the input box where the user enters their guess.
- */
-function cleanBox() {
-    document.getElementById('valorUsuario').value = '';
+// Function to clear the input box
+function clearBox() {
+    document.getElementById('userValue').value = '';
 }
 
-/**
- * Sets the initial conditions for the game.
- * Displays initial messages and generates a secret number.
- */
+// Function to set initial conditions for the game
 function initialConditions() {
-    asignarTextoElemento('h1', 'Game of the secret number');
-    asignarTextoElemento('p', 'Select a number between 1 to 10');
-    numeroSecreto = generarNumeroSecreto();
-    console.log(numeroSecreto);
+    assignTextToElement('h1', 'Game of the Secret Number');
+    assignTextToElement('p', 'Select a number between 1 to 10');
+    secretNumber = generateSecretNumber();
+    console.log(secretNumber);
     counter = 1;
     console.log(counter);
 }
 
-/**
- * Restarts the game by resetting conditions and disabling the restart button.
- */
-function reiniciarJuego() {
-    cleanBox();
+// Function to restart the game
+function restartGame() {
+    clearBox();
     initialConditions();
-    document.getElementById('reiniciar').setAttribute('disabled', 'true');
+    document.getElementById('restart').setAttribute('disabled', 'true');
 }
